@@ -374,9 +374,7 @@
     <div class="team-card t0" onclick="addPoint(0)">
       <div class="card-tb" id="tb0">TIEBREAK</div>
       <div class="card-label" id="lbl0">EQUIPO 1</div>
-      <div class="card-name" id="cn0"></div>
       <div class="card-points" id="pts0">0</div>
-      <div class="card-hint">toca para sumar punto</div>
     </div>
 
     <div class="court-divider"></div>
@@ -384,9 +382,7 @@
     <div class="team-card t1" onclick="addPoint(1)">
       <div class="card-tb" id="tb1">TIEBREAK</div>
       <div class="card-label" id="lbl1">EQUIPO 2</div>
-      <div class="card-name" id="cn1"></div>
       <div class="card-points" id="pts1">0</div>
-      <div class="card-hint">toca para sumar punto</div>
     </div>
   </div>
 
@@ -457,8 +453,6 @@ function applyNames() {
   const [n0, n1] = s.names;
   document.getElementById('sb0').textContent  = n0;
   document.getElementById('sb1').textContent  = n1;
-  document.getElementById('cn0').textContent  = n0;
-  document.getElementById('cn1').textContent  = n1;
   document.getElementById('lbl0').textContent = n0.toUpperCase();
   document.getElementById('lbl1').textContent = n1.toUpperCase();
 }
