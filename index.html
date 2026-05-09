@@ -32,6 +32,8 @@
       background: radial-gradient(ellipse at top, #1a1a3e 0%, #080814 70%);
     }
 
+    #team-inputs { margin-top: 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; width: 100%; }
+
     .logo { font-size: 3rem; line-height: 1; }
 
     #setup h1 {
@@ -228,9 +230,11 @@
       transition: transform .1s;
     }
     .btn-win:active { transform: scale(.9); }
-    .btn-win.plus  { background: #1a3a2a; color: #34d399; }
-    .btn-win.minus { background: #1a1a30; color: #444; }
-    .btn-win.minus:active { color: #888; }
+    .btn-win.plus   { background: #1a3a2a; color: #34d399; }
+    .btn-win.minus  { background: #1a1a30; color: #444; }
+    .btn-win.minus:active  { color: #888; }
+    .btn-win.remove { background: #1a1a30; color: #2a2a4a; font-size: 1rem; }
+    .btn-win.remove:active { background: #2a1a1a; color: #f87171; }
 
     /* matchup buttons */
     .st-matches {
@@ -239,12 +243,19 @@
       gap: 0.5rem;
     }
 
+    .matchup-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
     .btn-matchup {
+      flex: 1;
       background: #0e0e24;
       border: 1px solid #2a2a4a;
       border-radius: 14px;
       color: #aaa;
-      padding: 0.9rem 1.2rem;
+      padding: 0.9rem 1rem;
       font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
@@ -256,6 +267,61 @@
     }
     .btn-matchup:active { border-color: #38bdf8; color: #fff; }
     .btn-matchup-icon { font-size: 1rem; flex-shrink: 0; }
+
+    .btn-matchup-del {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: #1a1a30;
+      border: none;
+      border-radius: 10px;
+      color: #2a2a4a;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .1s, color .1s;
+    }
+    .btn-matchup-del:active { background: #2a1a1a; color: #f87171; }
+
+    /* setup dynamic inputs */
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+    }
+    .input-row .input-group { flex: 1; margin: 0; }
+
+    .btn-remove-input {
+      flex-shrink: 0;
+      width: 38px; height: 46px;
+      background: #1a1a30;
+      border: none;
+      border-radius: 12px;
+      color: #444;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-bottom: 0;
+      transition: color .15s, background .15s;
+    }
+    .btn-remove-input:active { color: #f87171; background: #2a1a1a; }
+
+    .btn-add-input {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%; max-width: 300px;
+      background: #0e0e24;
+      border: 1.5px dashed #2a2a4a;
+      border-radius: 14px;
+      color: #38bdf8;
+      padding: 0.8rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .btn-add-input:active { border-color: #38bdf8; background: #0c0c28; }
 
     .btn-reset-tour {
       background: none;
@@ -533,27 +599,18 @@
 <div id="setup">
   <div class="logo">🎾</div>
   <h1>PadelTime</h1>
-  <p class="subtitle">Torneo de 3 parejas</p>
+  <p class="subtitle">Agrega las parejas</p>
 
-  <div class="input-group">
-    <label>Pareja 1</label>
-    <input type="text" id="t1" placeholder="Los Tigres" maxlength="18" autocomplete="off">
-  </div>
-  <div class="input-group">
-    <label>Pareja 2</label>
-    <input type="text" id="t2" placeholder="Las Panteras" maxlength="18" autocomplete="off">
-  </div>
-  <div class="input-group">
-    <label>Pareja 3</label>
-    <input type="text" id="t3" placeholder="Los Osos" maxlength="18" autocomplete="off">
-  </div>
+  <div id="team-inputs"></div>
 
+  <button class="btn-add-input" onclick="addTeamInput('')">＋ Agregar pareja</button>
   <button class="btn-start" onclick="startTourney()">Empezar Torneo</button>
 </div>
 
 <!-- ══ STANDINGS ══ -->
 <div id="standings">
   <div class="st-topbar">
+    <button class="btn-icon" onclick="goToSetup()" title="Volver">←</button>
     <div class="st-topbar-title">🎾 PadelTime</div>
     <button class="btn-icon" onclick="openTourneyRename()" title="Renombrar equipos">✏️</button>
   </div>
@@ -653,28 +710,19 @@
   </div>
 </div>
 
-<!-- RENAME TOURNEY MODAL -->
+
+<!-- RENAME TOURNEY MODAL (inputs generados por JS) -->
 <div class="modal-backdrop" id="modal-trename">
   <div class="modal-box">
     <div class="modal-title">Renombrar parejas</div>
-    <div class="modal-field">
-      <div class="modal-input-label">Pareja 1</div>
-      <input class="modal-input" id="tr0" type="text" maxlength="18" autocomplete="off">
-    </div>
-    <div class="modal-field">
-      <div class="modal-input-label">Pareja 2</div>
-      <input class="modal-input" id="tr1" type="text" maxlength="18" autocomplete="off">
-    </div>
-    <div class="modal-field">
-      <div class="modal-input-label">Pareja 3</div>
-      <input class="modal-input" id="tr2" type="text" maxlength="18" autocomplete="off">
-    </div>
+    <div id="trename-fields"></div>
     <div class="modal-actions">
       <button class="btn-modal-cancel" onclick="closeTourneyRename()">Cancelar</button>
       <button class="btn-modal-ok" onclick="applyTourneyRename()">Guardar</button>
     </div>
   </div>
 </div>
+
 
 <!-- WINNER -->
 <div id="overlay">
@@ -693,7 +741,7 @@
 'use strict';
 
 /* ══ TOURNEY STATE ══ */
-let T = { names: ['','',''], wins: [0,0,0] };
+let T = { names: ['','',''], wins: [0,0,0], hiddenPairs: new Set() };
 let matchTourIdx = [-1, -1]; // which tourney indices are playing
 
 /* ══ MATCH STATE ══ */
@@ -711,20 +759,78 @@ function mkState(names) {
   };
 }
 
+/* ══ SETUP — inputs dinámicos ══ */
+const PLACEHOLDERS = ['Los Tigres','Las Panteras','Los Osos','Los Leones','Los Águilas'];
+
+function addTeamInput(value) {
+  const container = document.getElementById('team-inputs');
+  const n = container.children.length + 1;
+  const ph = PLACEHOLDERS[n - 1] || 'Pareja ' + n;
+  const row = document.createElement('div');
+  row.className = 'input-row';
+  row.innerHTML = `
+    <div class="input-group">
+      <label>Pareja ${n}</label>
+      <input type="text" class="team-input" placeholder="${ph}" maxlength="18" autocomplete="off">
+    </div>
+    <button class="btn-remove-input" onclick="removeTeamInput(this)">×</button>`;
+  if (value) row.querySelector('.team-input').value = value;
+  container.appendChild(row);
+  updateRemoveButtons();
+}
+
+function removeTeamInput(btn) {
+  const container = document.getElementById('team-inputs');
+  if (container.children.length <= 2) return;
+  btn.closest('.input-row').remove();
+  Array.from(container.querySelectorAll('label')).forEach((lbl, i) => {
+    lbl.textContent = 'Pareja ' + (i + 1);
+  });
+  updateRemoveButtons();
+}
+
+function updateRemoveButtons() {
+  const container = document.getElementById('team-inputs');
+  const show = container.children.length > 2;
+  container.querySelectorAll('.btn-remove-input').forEach(b => {
+    b.style.visibility = show ? 'visible' : 'hidden';
+  });
+}
+
 /* ══ SETUP → STANDINGS ══ */
 function startTourney() {
-  T.names[0] = document.getElementById('t1').value.trim() || 'Pareja 1';
-  T.names[1] = document.getElementById('t2').value.trim() || 'Pareja 2';
-  T.names[2] = document.getElementById('t3').value.trim() || 'Pareja 3';
-  T.wins = [0, 0, 0];
+  const inputs = document.querySelectorAll('.team-input');
+  const prevNames = T.names.slice();
+  const prevWins  = T.wins.slice();
+  T.names = [];
+  T.wins  = [];
+  T.hiddenPairs = new Set();
+  inputs.forEach((inp, i) => {
+    const name = inp.value.trim() || 'Pareja ' + (i + 1);
+    const existing = prevNames.indexOf(name);
+    T.names.push(name);
+    T.wins.push(existing >= 0 ? prevWins[existing] : 0);
+  });
   show('standings');
   renderStandings();
 }
 
+function goToSetup() {
+  const container = document.getElementById('team-inputs');
+  container.innerHTML = '';
+  T.names.forEach(name => addTeamInput(name));
+  show('setup');
+}
+
+// inicializar 3 inputs al cargar
+(function init() {
+  addTeamInput(''); addTeamInput(''); addTeamInput('');
+})();
+
 /* ══ STANDINGS ══ */
 function renderStandings() {
   // sort by wins desc, keep original index
-  const order = [0,1,2].sort((a,b) => T.wins[b] - T.wins[a]);
+  const order = Array.from({length: T.names.length}, (_,i) => i).sort((a,b) => T.wins[b] - T.wins[a]);
 
   const tbl = document.getElementById('st-table');
   tbl.innerHTML = '';
@@ -742,21 +848,34 @@ function renderStandings() {
       <div class="st-btns">
         <button class="btn-win minus" onclick="changeWin(${ti},-1)">−</button>
         <button class="btn-win plus"  onclick="changeWin(${ti}, 1)">+</button>
+        <button class="btn-win remove" onclick="removeTeam(${ti})">×</button>
       </div>`;
     tbl.appendChild(row);
   });
 
-  // matchup buttons
-  const pairs = [[0,1],[0,2],[1,2]];
+  // matchup buttons — all pairs dynamically
   const mtch = document.getElementById('st-matches');
   mtch.innerHTML = '';
-  pairs.forEach(([a,b]) => {
-    const btn = document.createElement('button');
-    btn.className = 'btn-matchup';
-    btn.innerHTML = `<span class="btn-matchup-icon">🎾</span>${esc(T.names[a])} vs ${esc(T.names[b])}`;
-    btn.onclick = () => playMatch(a, b);
-    mtch.appendChild(btn);
-  });
+  const n = T.names.length;
+  for (let a = 0; a < n; a++) {
+    for (let b = a + 1; b < n; b++) {
+      const key = a + '-' + b;
+      if (T.hiddenPairs.has(key)) continue;
+      const row = document.createElement('div');
+      row.className = 'matchup-row';
+      const btn = document.createElement('button');
+      btn.className = 'btn-matchup';
+      btn.innerHTML = `<span class="btn-matchup-icon">🎾</span>${esc(T.names[a])} vs ${esc(T.names[b])}`;
+      btn.onclick = ((ia, ib) => () => playMatch(ia, ib))(a, b);
+      const del = document.createElement('button');
+      del.className = 'btn-matchup-del';
+      del.textContent = '×';
+      del.onclick = ((k) => () => { T.hiddenPairs.add(k); renderStandings(); })(key);
+      row.appendChild(btn);
+      row.appendChild(del);
+      mtch.appendChild(row);
+    }
+  }
 }
 
 function changeWin(ti, delta) {
@@ -764,16 +883,31 @@ function changeWin(ti, delta) {
   renderStandings();
 }
 
-function confirmResetTour() {
-  if (!confirm('¿Reiniciar todas las victorias?')) return;
-  T.wins = [0,0,0];
+function removeTeam(ti) {
+  if (T.names.length <= 2) return;
+  T.names.splice(ti, 1);
+  T.wins.splice(ti, 1);
   renderStandings();
 }
 
-/* ══ TOURNEY RENAME ══ */
+function confirmResetTour() {
+  if (!confirm('¿Reiniciar todas las victorias?')) return;
+  T.wins = T.wins.map(() => 0);
+  T.hiddenPairs = new Set();
+  renderStandings();
+}
+
+/* ══ TOURNEY RENAME (dinámico) ══ */
 function openTourneyRename() {
-  for (let i = 0; i < 3; i++)
-    document.getElementById('tr'+i).value = T.names[i];
+  const container = document.getElementById('trename-fields');
+  container.innerHTML = '';
+  T.names.forEach((name, i) => {
+    container.innerHTML += `
+      <div class="modal-field" style="margin-bottom:0.8rem">
+        <div class="modal-input-label">Pareja ${i+1}</div>
+        <input class="modal-input" id="tr${i}" type="text" maxlength="18" value="${esc(name)}" autocomplete="off">
+      </div>`;
+  });
   document.getElementById('modal-trename').style.display = 'flex';
   setTimeout(() => document.getElementById('tr0').focus(), 100);
 }
@@ -781,11 +915,14 @@ function closeTourneyRename() {
   document.getElementById('modal-trename').style.display = 'none';
 }
 function applyTourneyRename() {
-  for (let i = 0; i < 3; i++)
-    T.names[i] = document.getElementById('tr'+i).value.trim() || T.names[i];
+  T.names.forEach((_, i) => {
+    const val = document.getElementById('tr'+i).value.trim();
+    if (val) T.names[i] = val;
+  });
   closeTourneyRename();
   renderStandings();
 }
+
 
 /* ══ PLAY MATCH ══ */
 function playMatch(a, b) {
@@ -963,6 +1100,7 @@ function esc(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+
 /* close modals on backdrop tap */
 ['modal-rename','modal-trename'].forEach(id => {
   document.getElementById(id).addEventListener('click', function(e) {
@@ -972,9 +1110,6 @@ function esc(str) {
 
 ['rn0','rn1'].forEach(id =>
   document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') applyRename(); })
-);
-['tr0','tr1','tr2'].forEach(id =>
-  document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') applyTourneyRename(); })
 );
 </script>
 </body>
