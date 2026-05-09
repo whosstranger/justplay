@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PadelTime">
+  <title>PadelTime</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: #080814;
+      color: #fff;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      touch-action: manipulation;
+      overflow: hidden;
+    }
+
+    /* ── SETUP ── */
+    #setup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      gap: 1.4rem;
+      background: radial-gradient(ellipse at top, #1a1a3e 0%, #080814 70%);
+    }
+
+    .logo { font-size: 3.5rem; line-height: 1; }
+
+    #setup h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { color: #4a4a6a; font-size: 0.9rem; }
+
+    .input-group { width: 100%; max-width: 300px; }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: #666;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background: #12122a;
+      border: 1.5px solid #2a2a4a;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .input-group input:focus { border-color: #38bdf8; }
+    .input-group input::placeholder { color: #3a3a5a; }
+
+    .btn-start {
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      color: #000;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      box-shadow: 0 4px 24px rgba(56,189,248,.35);
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-start:active { transform: scale(.96); box-shadow: 0 2px 12px rgba(56,189,248,.2); }
+
+    /* ── GAME ── */
+    #game {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      height: -webkit-fill-available;
+    }
+
+    .scoreboard {
+      background: #0c0c20;
+      padding: 0.7rem 1rem 0.6rem;
+      border-bottom: 1px solid #1a1a30;
+    }
+
+    .sb-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0;
+    }
+
+    .sb-edit-icon { font-size: 0.7rem; color: #2a2a4a; cursor: pointer; flex-shrink: 0; }
+
+    .sb-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #aaa;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .sb-name:active { color: #38bdf8; }
+
+    .sb-sets { display: flex; gap: 0.3rem; }
+
+    .sb-set {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      background: #1a1a30;
+      border-radius: 6px;
+      font-size: 0.9rem; font-weight: 800; color: #666;
+      transition: background .2s, color .2s;
+    }
+    .sb-set.won { background: #34d399; color: #000; }
+
+    .sb-games {
+      font-size: 1.4rem; font-weight: 900;
+      min-width: 28px; text-align: center; color: #e0e0e0;
+    }
+
+    .set-label {
+      font-size: 0.6rem; color: #333;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      text-align: right; padding-right: 0.3rem;
+      padding-bottom: 0.15rem; font-weight: 600;
+    }
+
+    .tb-badge-header {
+      font-size: 0.6rem; font-weight: 800;
+      color: #ef4444; letter-spacing: 0.08em;
+      padding: .15rem .4rem;
+      border: 1px solid #ef4444; border-radius: 4px;
+    }
+
+    .court { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .team-card {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.3rem;
+      cursor: pointer; user-select: none;
+      position: relative;
+      transition: background .08s;
+    }
+    .team-card:active { background: rgba(255,255,255,.04); }
+    .team-card.t0 { background: linear-gradient(180deg, #0c0c20 0%, #080814 100%); }
+    .team-card.t1 { background: linear-gradient(180deg, #080814 0%, #0c0c20 100%); }
+
+    .court-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #2a2a4a, transparent);
+      flex-shrink: 0;
+    }
+
+    .card-label {
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .t0 .card-label { color: #38bdf8; }
+    .t1 .card-label { color: #f87171; }
+
+    .card-name { font-size: 1rem; font-weight: 600; color: #aaa; }
+
+    .card-points {
+      font-size: 6rem; font-weight: 900;
+      line-height: 1; letter-spacing: -0.04em;
+    }
+    .t0 .card-points { color: #38bdf8; }
+    .t1 .card-points { color: #f87171; }
+
+    .card-hint {
+      position: absolute; bottom: 0.8rem;
+      font-size: 0.65rem; color: #2a2a4a;
+      font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    .card-tb {
+      display: none;
+      background: #ef4444; color: #fff;
+      font-size: 0.65rem; font-weight: 800;
+      letter-spacing: 0.1em;
+      padding: .2rem .5rem; border-radius: 4px;
+    }
+
+    .controls {
+      display: flex; gap: 0.5rem;
+      padding: 0.8rem 1rem;
+      background: #0c0c20;
+      border-top: 1px solid #1a1a30;
+      padding-bottom: max(0.8rem, env(safe-area-inset-bottom));
+    }
+
+    .btn-ctrl {
+      flex: 1;
+      background: #1a1a30; border: none;
+      color: #888;
+      padding: 0.75rem 0.3rem;
+      border-radius: 10px;
+      font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: background .1s, color .1s;
+    }
+    .btn-ctrl:active { background: #252545; color: #ccc; }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(4,4,16,.92);
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 60;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 2rem;
+    }
+
+    .modal-box {
+      background: #12122a;
+      border: 1px solid #2a2a4a;
+      border-radius: 20px;
+      padding: 1.8rem 1.5rem;
+      width: 100%; max-width: 320px;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+
+    .modal-title { font-size: 1rem; font-weight: 800; color: #ccc; }
+
+    .modal-field { display: flex; flex-direction: column; }
+
+    .modal-input-label {
+      font-size: 0.7rem; color: #444;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      font-weight: 600; margin-bottom: 0.3rem;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: #0c0c20;
+      border: 1.5px solid #2a2a4a; border-radius: 12px;
+      color: #fff; font-size: 0.95rem; font-weight: 600;
+      outline: none; transition: border-color .2s;
+    }
+    .modal-input:focus { border-color: #38bdf8; }
+    .modal-input::placeholder { color: #2a2a4a; }
+
+    .modal-actions { display: flex; gap: 0.6rem; }
+
+    .btn-modal-cancel {
+      flex: 1; background: #1a1a30; border: none;
+      color: #666; padding: 0.8rem; border-radius: 12px;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-modal-cancel:active { opacity: .7; }
+
+    .btn-modal-ok {
+      flex: 2;
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      border: none; color: #000;
+      padding: 0.8rem; border-radius: 12px;
+      font-size: 0.85rem; font-weight: 800; cursor: pointer;
+    }
+    .btn-modal-ok:active { opacity: .85; transform: scale(.97); }
+
+    /* ── WINNER ── */
+    #overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(4,4,16,.95);
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.2rem; z-index: 50;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .ov-trophy { font-size: 5rem; line-height: 1; animation: pop .6s ease; }
+
+    @keyframes pop {
+      0%   { transform: scale(.3); opacity: 0; }
+      70%  { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .ov-title {
+      font-size: .85rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase; color: #555;
+    }
+
+    #ov-winner {
+      font-size: 2.2rem; font-weight: 900;
+      letter-spacing: -.02em;
+      background: linear-gradient(135deg, #fbbf24, #f87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center; padding: 0 1.5rem;
+    }
+
+    .ov-sets { font-size: .9rem; color: #444; font-weight: 600; }
+
+    .btn-new {
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      color: #000; border: none;
+      padding: .9rem 2.5rem; border-radius: 50px;
+      font-size: .95rem; font-weight: 800; cursor: pointer;
+      margin-top: .5rem;
+      box-shadow: 0 4px 20px rgba(56,189,248,.3);
+    }
+    .btn-new:active { opacity: .85; transform: scale(.97); }
+  </style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup">
+  <div class="logo">🎾</div>
+  <h1>PadelTime</h1>
+  <p class="subtitle">Al mejor de 3 sets</p>
+
+  <div class="input-group">
+    <label>Equipo 1</label>
+    <input type="text" id="t1" placeholder="Los Tigres" maxlength="18" autocomplete="off">
+  </div>
+  <div class="input-group">
+    <label>Equipo 2</label>
+    <input type="text" id="t2" placeholder="Las Panteras" maxlength="18" autocomplete="off">
+  </div>
+  <button class="btn-start" onclick="startGame()">Empezar Partido</button>
+</div>
+
+<!-- GAME -->
+<div id="game">
+  <div class="scoreboard">
+    <div class="set-label" id="set-label">Set 1</div>
+    <div class="sb-row">
+      <span class="sb-edit-icon" onclick="openRename()">✏️</span>
+      <div class="sb-name" id="sb0" onclick="openRename()"></div>
+      <div class="sb-sets" id="ss0"></div>
+      <div class="sb-games" id="sg0">0</div>
+    </div>
+    <div class="sb-row">
+      <span class="sb-edit-icon" onclick="openRename()">✏️</span>
+      <div class="sb-name" id="sb1" onclick="openRename()"></div>
+      <div class="sb-sets" id="ss1"></div>
+      <div class="sb-games" id="sg1">0</div>
+    </div>
+  </div>
+
+  <div class="court">
+    <div class="team-card t0" onclick="addPoint(0)">
+      <div class="card-tb" id="tb0">TIEBREAK</div>
+      <div class="card-label" id="lbl0">EQUIPO 1</div>
+      <div class="card-name" id="cn0"></div>
+      <div class="card-points" id="pts0">0</div>
+      <div class="card-hint">toca para sumar punto</div>
+    </div>
+
+    <div class="court-divider"></div>
+
+    <div class="team-card t1" onclick="addPoint(1)">
+      <div class="card-tb" id="tb1">TIEBREAK</div>
+      <div class="card-label" id="lbl1">EQUIPO 2</div>
+      <div class="card-name" id="cn1"></div>
+      <div class="card-points" id="pts1">0</div>
+      <div class="card-hint">toca para sumar punto</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-ctrl" onclick="undo()">↩ Deshacer</button>
+    <button class="btn-ctrl" onclick="openRename()">✏️ Equipos</button>
+    <button class="btn-ctrl" onclick="confirmReset()">↺ Reiniciar</button>
+  </div>
+</div>
+
+<!-- RENAME MODAL -->
+<div class="modal-backdrop" id="modal-rename">
+  <div class="modal-box">
+    <div class="modal-title">Cambiar nombres</div>
+    <div class="modal-field">
+      <div class="modal-input-label">Equipo 1</div>
+      <input class="modal-input" id="rn0" type="text" maxlength="18" autocomplete="off">
+    </div>
+    <div class="modal-field">
+      <div class="modal-input-label">Equipo 2</div>
+      <input class="modal-input" id="rn1" type="text" maxlength="18" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeRename()">Cancelar</button>
+      <button class="btn-modal-ok" onclick="applyRename()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- WINNER -->
+<div id="overlay">
+  <div class="ov-trophy">🏆</div>
+  <div class="ov-title">¡Ganador del partido!</div>
+  <div id="ov-winner"></div>
+  <div class="ov-sets" id="ov-sets"></div>
+  <button class="btn-new" onclick="newMatch()">Nuevo Partido</button>
+</div>
+
+<script>
+'use strict';
+
+const PTS = ['0','15','30','40'];
+let s = {}, hist = [];
+
+function mkState(names) {
+  return {
+    names,
+    sets: [], setsWon: [0,0],
+    games: [0,0], pts: [0,0],
+    deuce: false, adv: -1,
+    tb: false, tbPts: [0,0],
+    over: false, winner: -1
+  };
+}
+
+function startGame() {
+  const n0 = document.getElementById('t1').value.trim() || 'Equipo 1';
+  const n1 = document.getElementById('t2').value.trim() || 'Equipo 2';
+  s = mkState([n0, n1]);
+  hist = [];
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('game').style.display  = 'flex';
+  applyNames();
+  render();
+}
+
+function applyNames() {
+  const [n0, n1] = s.names;
+  document.getElementById('sb0').textContent  = n0;
+  document.getElementById('sb1').textContent  = n1;
+  document.getElementById('cn0').textContent  = n0;
+  document.getElementById('cn1').textContent  = n1;
+  document.getElementById('lbl0').textContent = n0.toUpperCase();
+  document.getElementById('lbl1').textContent = n1.toUpperCase();
+}
+
+function openRename() {
+  document.getElementById('rn0').value = s.names[0];
+  document.getElementById('rn1').value = s.names[1];
+  document.getElementById('modal-rename').style.display = 'flex';
+  setTimeout(() => document.getElementById('rn0').focus(), 100);
+}
+
+function closeRename() {
+  document.getElementById('modal-rename').style.display = 'none';
+}
+
+function applyRename() {
+  s.names[0] = document.getElementById('rn0').value.trim() || s.names[0];
+  s.names[1] = document.getElementById('rn1').value.trim() || s.names[1];
+  applyNames();
+  closeRename();
+}
+
+function addPoint(t) {
+  if (s.over) return;
+  hist.push(JSON.parse(JSON.stringify(s)));
+  if (hist.length > 60) hist.shift();
+
+  const o = 1 - t;
+
+  if (s.tb) {
+    s.tbPts[t]++;
+    if (s.tbPts[t] >= 7 && s.tbPts[t] - s.tbPts[o] >= 2) winGame(t);
+  } else if (s.deuce) {
+    if      (s.adv === t) winGame(t);
+    else if (s.adv === o) s.adv = -1;
+    else                  s.adv = t;
+  } else {
+    if (s.pts[t] === 3 && s.pts[o] === 3) {
+      s.deuce = true;
+    } else if (s.pts[t] === 3) {
+      winGame(t);
+    } else {
+      s.pts[t]++;
+      if (s.pts[t] === 3 && s.pts[o] === 3) s.deuce = true;
+    }
+  }
+
+  render();
+}
+
+function winGame(t) {
+  const o = 1 - t;
+  s.games[t]++;
+  s.pts = [0,0]; s.deuce = false; s.adv = -1; s.tb = false; s.tbPts = [0,0];
+
+  const g = s.games[t], go = s.games[o];
+  if (g === 7 || (g >= 6 && g - go >= 2)) winSet(t);
+  else if (g === 6 && go === 6)            s.tb = true;
+}
+
+function winSet(t) {
+  s.sets.push({ g: [s.games[0], s.games[1]] });
+  s.setsWon[t]++;
+  s.games = [0,0];
+  if (s.setsWon[t] === 2) { s.over = true; s.winner = t; showWinner(t); }
+  render();
+}
+
+function showWinner(t) {
+  document.getElementById('ov-winner').textContent = s.names[t];
+  document.getElementById('ov-sets').textContent   = s.sets.map(st => st.g[0]+'-'+st.g[1]).join('  ');
+  document.getElementById('overlay').style.display = 'flex';
+}
+
+function undo() {
+  if (!hist.length) return;
+  s = hist.pop();
+  document.getElementById('overlay').style.display = 'none';
+  render();
+}
+
+function confirmReset() {
+  if (!confirm('¿Reiniciar el partido?')) return;
+  s = mkState(s.names); hist = [];
+  document.getElementById('overlay').style.display = 'none';
+  render();
+}
+
+function newMatch() {
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('game').style.display    = 'none';
+  document.getElementById('setup').style.display   = 'flex';
+  document.getElementById('t1').value = s.names[0] !== 'Equipo 1' ? s.names[0] : '';
+  document.getElementById('t2').value = s.names[1] !== 'Equipo 2' ? s.names[1] : '';
+}
+
+function render() {
+  for (let t = 0; t < 2; t++) {
+    let d;
+    if (s.tb) {
+      d = s.tbPts[t].toString();
+      document.getElementById('tb'+t).style.display = 'block';
+    } else {
+      document.getElementById('tb'+t).style.display = 'none';
+      if (s.deuce) {
+        d = s.adv === t ? 'ADV' : s.adv === 1-t ? '—' : '40';
+      } else {
+        d = PTS[s.pts[t]];
+      }
+    }
+    document.getElementById('pts'+t).textContent = d;
+    document.getElementById('sg'+t).textContent  = s.games[t];
+  }
+
+  for (let t = 0; t < 2; t++) {
+    const el = document.getElementById('ss'+t);
+    el.innerHTML = '';
+    s.sets.forEach(st => {
+      const g = st.g[t], go = st.g[1-t];
+      const d = document.createElement('div');
+      d.className = 'sb-set' + (g > go ? ' won' : '');
+      d.textContent = g;
+      el.appendChild(d);
+    });
+  }
+
+  const n = s.sets.length + 1;
+  document.getElementById('set-label').innerHTML =
+    'Set ' + n + (s.tb ? ' &nbsp;·&nbsp; <span class="tb-badge-header">TIEBREAK</span>' : '');
+}
+
+document.getElementById('modal-rename').addEventListener('click', function(e) {
+  if (e.target === this) closeRename();
+});
+['rn0','rn1'].forEach(id =>
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') applyRename(); })
+);
+</script>
+</body>
+</html>
