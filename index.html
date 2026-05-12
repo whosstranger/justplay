@@ -336,6 +336,211 @@
     }
     .btn-reset-tour:active { color: #888; border-color: #333; }
 
+    .btn-players-mode {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%; max-width: 300px;
+      background: #0e0e24;
+      border: 1.5px solid #2a2a4a;
+      border-radius: 14px;
+      color: #aaa;
+      padding: 0.85rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-players-mode:active { border-color: #38bdf8; color: #fff; }
+
+    .setup-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      width: 100%; max-width: 300px;
+    }
+    .setup-divider-line { flex: 1; height: 1px; background: #1a1a30; }
+    .setup-divider-text { color: #2a2a4a; font-size: 0.72rem; font-weight: 600; }
+
+    /* ══ PLAYERS ══ */
+    #players {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      height: -webkit-fill-available;
+      background: radial-gradient(ellipse at top, #1a1a3e 0%, #080814 70%);
+    }
+
+    .players-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.2rem 0.6rem;
+      border-bottom: 1px solid #1a1a30;
+      flex-shrink: 0;
+    }
+
+    .players-body {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.2rem;
+      gap: 0.8rem;
+      padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
+    }
+
+    .players-inner {
+      width: 100%; max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    #player-inputs {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .btn-shuffle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%; max-width: 300px;
+      background: #0e0e24;
+      border: 1.5px solid #2a2a4a;
+      border-radius: 14px;
+      color: #38bdf8;
+      padding: 0.85rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .btn-shuffle:active { border-color: #38bdf8; background: #0c0c28; }
+
+    #assignment-result {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .pair-card {
+      width: 100%;
+      background: #0e0e24;
+      border: 1.5px solid #1a1a30;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+    }
+    .pair-card.pair-active { border-color: #2a4060; background: #0a1020; }
+
+    .pair-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.3rem;
+    }
+
+    .pair-players {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .pair-player {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ccc;
+    }
+    .pair-card.pair-active .pair-player { color: #e0e0e0; }
+
+    .pair-amp {
+      font-size: 0.7rem;
+      color: #2a2a4a;
+      font-weight: 600;
+    }
+
+    .first-match-box {
+      width: 100%;
+      background: #081828;
+      border: 1.5px solid #38bdf8;
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+    }
+
+    .first-match-header {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.7rem;
+    }
+
+    .first-match-vs {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .fm-team { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .fm-pair-num {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .fm-names {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+    }
+
+    .fm-serve-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      color: #000;
+      font-size: 0.58rem;
+      font-weight: 800;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      margin-top: 0.25rem;
+      width: fit-content;
+      letter-spacing: 0.05em;
+    }
+
+    .fm-vs {
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: #1a3a5a;
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+    }
+
+    .fm-waiting {
+      margin-top: 0.65rem;
+      padding-top: 0.55rem;
+      border-top: 1px solid #0e2a40;
+      font-size: 0.7rem;
+      color: #2a4a6a;
+      font-weight: 600;
+    }
+
     /* ══ GAME ══ */
     #game {
       display: none;
@@ -591,6 +796,31 @@
 
   <button class="btn-add-input" onclick="addTeamInput('')">＋ Agregar pareja</button>
   <button class="btn-start" onclick="startTourney()">Empezar Torneo</button>
+
+  <div class="setup-divider">
+    <div class="setup-divider-line"></div>
+    <div class="setup-divider-text">o bien</div>
+    <div class="setup-divider-line"></div>
+  </div>
+  <button class="btn-players-mode" onclick="goToPlayers()">👥 Sortear por integrantes</button>
+</div>
+
+<!-- ══ PLAYERS ══ -->
+<div id="players">
+  <div class="players-topbar">
+    <button class="btn-icon" onclick="goToSetupFromPlayers()">←</button>
+    <div class="st-topbar-title">👥 Integrantes</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="players-body">
+    <div class="players-inner">
+      <div id="player-inputs"></div>
+      <button class="btn-add-input" onclick="addPlayerInput('')">＋ Agregar jugador</button>
+      <button class="btn-shuffle" onclick="shufflePairs()">🔀 Sortear parejas</button>
+      <div id="assignment-result"></div>
+      <button class="btn-start" id="btn-start-players" style="display:none" onclick="startFromPlayers()">🎾 Empezar Torneo</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ STANDINGS ══ -->
@@ -1000,12 +1230,136 @@ function render() {
   }
 }
 
+/* ══ PLAYERS ══ */
+let PL = { pairs: [], firstA: 0, firstB: 1 };
+
+function addPlayerInput(value) {
+  const container = document.getElementById('player-inputs');
+  const n = container.children.length + 1;
+  const row = document.createElement('div');
+  row.className = 'input-row';
+  row.innerHTML = `
+    <div class="input-group">
+      <label>Jugador ${n}</label>
+      <input type="text" class="player-input" placeholder="Nombre" maxlength="16" autocomplete="off">
+    </div>
+    <button class="btn-remove-input" onclick="removePlayerInput(this)">×</button>`;
+  if (value) row.querySelector('.player-input').value = value;
+  container.appendChild(row);
+  updatePlayerRemoveButtons();
+}
+
+function removePlayerInput(btn) {
+  const container = document.getElementById('player-inputs');
+  if (container.children.length <= 4) return;
+  btn.closest('.input-row').remove();
+  Array.from(container.querySelectorAll('label')).forEach((lbl, i) => {
+    lbl.textContent = 'Jugador ' + (i + 1);
+  });
+  updatePlayerRemoveButtons();
+}
+
+function updatePlayerRemoveButtons() {
+  const container = document.getElementById('player-inputs');
+  const show = container.children.length > 4;
+  container.querySelectorAll('.btn-remove-input').forEach(b => {
+    b.style.visibility = show ? 'visible' : 'hidden';
+  });
+}
+
+function shufflePairs() {
+  const inputs = document.querySelectorAll('.player-input');
+  const names = Array.from(inputs).map((inp, i) => inp.value.trim() || 'Jugador ' + (i + 1));
+  if (names.length % 2 !== 0) {
+    alert('Necesitas un número par de jugadores para formar parejas.');
+    return;
+  }
+  const sh = [...names];
+  for (let i = sh.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [sh[i], sh[j]] = [sh[j], sh[i]];
+  }
+  PL.pairs = [];
+  for (let i = 0; i < sh.length; i += 2) PL.pairs.push([sh[i], sh[i + 1]]);
+  // pick first match randomly
+  const idx = PL.pairs.map((_, i) => i);
+  for (let i = idx.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [idx[i], idx[j]] = [idx[j], idx[i]];
+  }
+  PL.firstA = idx[0];
+  PL.firstB = idx[1];
+  renderAssignment();
+}
+
+function renderAssignment() {
+  const container = document.getElementById('assignment-result');
+  if (!PL.pairs.length) { container.innerHTML = ''; return; }
+  const playing = new Set([PL.firstA, PL.firstB]);
+  const waiting = PL.pairs.map((_, i) => i).filter(i => !playing.has(i));
+
+  let html = `<div class="section-label" style="margin-bottom:0.2rem">Parejas asignadas</div>`;
+  html += PL.pairs.map((pair, i) => `
+    <div class="pair-card${playing.has(i) ? ' pair-active' : ''}">
+      <div class="pair-label">Pareja ${i + 1}</div>
+      <div class="pair-players">
+        <span class="pair-player">${esc(pair[0])}</span>
+        <span class="pair-amp">&amp;</span>
+        <span class="pair-player">${esc(pair[1])}</span>
+      </div>
+    </div>`).join('');
+
+  html += `
+    <div class="first-match-box">
+      <div class="first-match-header">⚡ Primer partido</div>
+      <div class="first-match-vs">
+        <div class="fm-team">
+          <div class="fm-pair-num">Pareja ${PL.firstA + 1}</div>
+          <div class="fm-names">${esc(PL.pairs[PL.firstA][0])}<br>${esc(PL.pairs[PL.firstA][1])}</div>
+          <div class="fm-serve-badge">Saca primero</div>
+        </div>
+        <div class="fm-vs">VS</div>
+        <div class="fm-team" style="text-align:right">
+          <div class="fm-pair-num">Pareja ${PL.firstB + 1}</div>
+          <div class="fm-names">${esc(PL.pairs[PL.firstB][0])}<br>${esc(PL.pairs[PL.firstB][1])}</div>
+        </div>
+      </div>
+      ${waiting.length ? `<div class="fm-waiting">Esperan: ${waiting.map(i => 'Pareja ' + (i + 1) + ' (' + PL.pairs[i].join(' & ') + ')').join(' · ')}</div>` : ''}
+    </div>`;
+
+  container.innerHTML = html;
+  document.getElementById('btn-start-players').style.display = 'block';
+}
+
+function startFromPlayers() {
+  if (PL.pairs.length < 2) return;
+  T.names = PL.pairs.map(p => p[0] + ' / ' + p[1]);
+  T.wins = T.names.map(() => 0);
+  T.hiddenPairs = new Set();
+  show('standings');
+  renderStandings();
+}
+
+function goToPlayers() {
+  const container = document.getElementById('player-inputs');
+  if (container.children.length === 0) {
+    addPlayerInput(''); addPlayerInput(''); addPlayerInput(''); addPlayerInput('');
+  }
+  document.getElementById('assignment-result').innerHTML = '';
+  document.getElementById('btn-start-players').style.display = 'none';
+  PL.pairs = [];
+  show('players');
+}
+
+function goToSetupFromPlayers() { show('setup'); }
+
 /* ══ UTILS ══ */
 function show(id) {
-  ['setup','standings','game'].forEach(s =>
-    document.getElementById(s).style.display = s===id ? (id==='standings'?'flex':'flex') : 'none'
+  ['setup','players','standings','game'].forEach(s =>
+    document.getElementById(s).style.display = 'none'
   );
-  if (id==='standings') document.getElementById('standings').style.display='flex';
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'flex';
 }
 
 function esc(str) {
